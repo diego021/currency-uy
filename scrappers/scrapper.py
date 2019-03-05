@@ -58,10 +58,38 @@ class Cambio18Scrapper(GeneralScrapper):
         sell = self.convert_to_float(rates[3].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
+class AspenScrapper(GeneralScrapper):
+
+    def __init__(self, *args, **kwargs):
+        GeneralScrapper.__init__(self, *args, **kwargs)
+        self.name = 'Cambio Aspen'
+        self.rates_table = self.soup.find('div', attrs={'class': 'bd fx'}).find('table')
+
+    def scrap_dollar(self):
+        rates = self.rates_table.find_all('tr', attrs={'class': 'bd'})[1].find_all('td')
+        buy = self.convert_to_float(rates[1].text)
+        sell = self.convert_to_float(rates[2].text)
+        self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
+
+class MatrizScrapper(GeneralScrapper):
+
+    def __init__(self, *args, **kwargs):
+        GeneralScrapper.__init__(self, *args, **kwargs)
+        self.name = 'Cambio Matriz'
+        self.rates_table = self.soup.find('div', attrs={'class': 'cont cotizaciones'}).find('table')
+
+    def scrap_dollar(self):
+        rates = self.rates_table.find('tr').find_all('td')
+        buy = self.convert_to_float(rates[2].text)
+        sell = self.convert_to_float(rates[4].text)
+        self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
+
 if __name__ == '__main__':
     a = GalesScrapper(url='http://www.gales.com.uy/home/')
     b = VarlixScrapper(url='https://www.varlix.com.uy/')
     c = Cambio18Scrapper(url='https://www.cambio18.com/')
-    for i in (a, b, c):
+    d = AspenScrapper(url='http://www.aspen.com.uy/sitio/')
+    e = MatrizScrapper(url='https://www.cambiomatriz.com.uy/')
+    for i in (a, b, c, d, e):
         i.scrap_dollar()
         print(i)
