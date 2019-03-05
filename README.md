@@ -1,2 +1,2 @@
 # currency-uy
-Scrapper to get currency quotes from all money exchange websites in Uruguay.
+Scrapper to get currency rates from all money exchange websites in Uruguay.

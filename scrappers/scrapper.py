@@ -87,19 +87,6 @@ class MatrizScrapper(GeneralScrapper):
         sell = self.convert_to_float(rates[4].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-class IndumexScrapper(GeneralScrapper):
-
-    def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
-        self.name = 'Cambio Indumex'
-        self.rates_div = self.soup.find('div', attrs={'class': 'rates'}).find('div')
-
-    def scrap_dollar(self):
-        assert False, 'Dynamic javascripts load rates!! WORK TO DO'
-        #buy = self.rates_div.find('span', id='compraDolar').text # Empty
-        #sell = self.rates_div.find('span', id='ventaDolar').text # Empty
-        #self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
-
 class IberiaScrapper(GeneralScrapper):
 
     def __init__(self, *args, **kwargs):
@@ -133,7 +120,6 @@ if __name__ == '__main__':
     e = MatrizScrapper(url='https://www.cambiomatriz.com.uy/')
     f = IberiaScrapper(url='http://www.cambioiberia.com/') 
     g = LaFavoritaScrapper(url='http://www.lafavorita.com.uy/')
-    #f = IndumexScrapper(url='https://www.indumex.com/')
     for i in (a, b, c, d, e, f, g):
         i.scrap_dollar()
         print(i)
