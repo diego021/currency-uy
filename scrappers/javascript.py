@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import sys
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from .scrapper import  GeneralScrapper
@@ -7,11 +8,17 @@ class JavascriptScrapper(GeneralScrapper):
     '''Superclass containing common things to dynamic scrappers'''
 
     def __init__(self, url):
-        driver = webdriver.PhantomJS(executable_path='scrappers/drivers/phantomjs-2.1.1-linux-x86_64/bin/phantomjs')
+        if sys.platform == 'linux':
+            myphantomjs = 'scrappers/drivers/phantomjs-2.1.1-linux-x86_64/bin/phantomjs'
+        elif sys.platform == 'darwin':
+            myphantomjs = 'scrappers/drivers/phantomjs-2.1.1-macosx/bin/phantomjs'
+        else:
+            raise NotImplementedError('This OS is not currently supported')
+        driver = webdriver.PhantomJS(executable_path=myphantomjs)
         driver.get(url)
         html = driver.page_source
         self.soup = BeautifulSoup(html, 'html.parser')
-        self.name = 'Dynamic Strapper'
+        self.name = 'Dynamic Scrapper'
         self.rates = {}
 
 class IndumexScrapper(JavascriptScrapper):
