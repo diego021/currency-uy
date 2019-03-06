@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import urllib.request
 from bs4 import BeautifulSoup
+from abc import ABC, abstractmethod
 
-class GeneralScrapper:
-    '''Superclass containing common things to all scrappers'''
+class ScrapperBase(ABC):
+    '''Base class containing common things to all scrappers'''
 
     def __init__(self, url):
         r = urllib.request.Request(url)
@@ -11,8 +12,12 @@ class GeneralScrapper:
         r.add_header('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8')
         html = urllib.request.urlopen(r).read()
         self.soup = BeautifulSoup(html, 'html.parser')
-        self.name = 'General Scrapper'
+        self.name = ''
         self.rates = {}
+
+    @abstractmethod
+    def scrap_dollar(self):
+        pass
 
     def __str__(self):
         return '{name}: {rates}'.format(name=self.name, rates=self.rates)
@@ -21,10 +26,10 @@ class GeneralScrapper:
     def convert_to_float(text):
         return float(text.replace(',', '.'))
 
-class GalesScrapper(GeneralScrapper):
+class GalesScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
+        ScrapperBase.__init__(self, *args, **kwargs)
         self.name = 'Cambio Gales'
         self.rates_table = self.soup.find('div', attrs={'class': 'cont_cotizaciones'})
 
@@ -34,10 +39,10 @@ class GalesScrapper(GeneralScrapper):
         sell = self.convert_to_float(rates[2].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-class VarlixScrapper(GeneralScrapper):
+class VarlixScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
+        ScrapperBase.__init__(self, *args, **kwargs)
         self.name = 'Cambio Varlix'
         self.rates_div = self.soup.find('div', attrs={'class': 'exchange'})
 
@@ -48,10 +53,10 @@ class VarlixScrapper(GeneralScrapper):
         sell = self.convert_to_float(sell.text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-class Cambio18Scrapper(GeneralScrapper):
+class Cambio18Scrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
+        ScrapperBase.__init__(self, *args, **kwargs)
         self.name = 'Cambio 18'
         self.rates_div = self.soup.find('div', attrs={'class': 'clearfix control-page-smallHeader'}).find('div')
 
@@ -61,10 +66,10 @@ class Cambio18Scrapper(GeneralScrapper):
         sell = self.convert_to_float(rates[3].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-class AspenScrapper(GeneralScrapper):
+class AspenScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
+        ScrapperBase.__init__(self, *args, **kwargs)
         self.name = 'Cambio Aspen'
         self.rates_table = self.soup.find('div', attrs={'class': 'bd fx'}).find('table')
 
@@ -74,10 +79,10 @@ class AspenScrapper(GeneralScrapper):
         sell = self.convert_to_float(rates[2].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-class MatrizScrapper(GeneralScrapper):
+class MatrizScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
+        ScrapperBase.__init__(self, *args, **kwargs)
         self.name = 'Cambio Matriz'
         self.rates_table = self.soup.find('div', attrs={'class': 'cont cotizaciones'}).find('table')
 
@@ -87,10 +92,10 @@ class MatrizScrapper(GeneralScrapper):
         sell = self.convert_to_float(rates[4].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-class IberiaScrapper(GeneralScrapper):
+class IberiaScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
+        ScrapperBase.__init__(self, *args, **kwargs)
         self.name = 'Cambio Iberia'
         self.rates_table = self.soup.find('div', attrs={'class': 'entry clearfix'}).find('table')
 
@@ -100,10 +105,10 @@ class IberiaScrapper(GeneralScrapper):
         sell = self.convert_to_float(rates[3].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-class LaFavoritaScrapper(GeneralScrapper):
+class LaFavoritaScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
-        GeneralScrapper.__init__(self, *args, **kwargs)
+        ScrapperBase.__init__(self, *args, **kwargs)
         self.name = 'La Favorita'
         self.rates_list = self.soup.find('div', attrs={'class': 'row'}).find_all('li', attrs={'class': 'color-cotizacion'})
 
