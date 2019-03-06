@@ -2,9 +2,9 @@
 import sys
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from .scrapper import  GeneralScrapper
+from .scrapper import ScrapperBase
 
-class JavascriptScrapper(GeneralScrapper):
+class JavascriptScrapper(ScrapperBase):
     '''Superclass containing common things to dynamic scrappers'''
 
     def __init__(self, url):
@@ -18,7 +18,7 @@ class JavascriptScrapper(GeneralScrapper):
         driver.get(url)
         html = driver.page_source
         self.soup = BeautifulSoup(html, 'html.parser')
-        self.name = 'Dynamic Scrapper'
+        self.name = ''
         self.rates = {}
 
 class IndumexScrapper(JavascriptScrapper):

@@ -17,7 +17,7 @@ class ScrapperBase(ABC):
 
     @abstractmethod
     def scrap_dollar(self):
-        pass
+        assert False, 'Must implement this method'
 
     def __str__(self):
         return '{name}: {rates}'.format(name=self.name, rates=self.rates)
