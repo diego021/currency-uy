@@ -34,6 +34,9 @@ class IndumexScrapper(JavascriptScrapper):
         sell = self.rates_div.find('span', id='ventaDolar').text # Empty
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
+        if persist_data and buy and sell:
+            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
+
 if __name__ == '__main__':
     a = IndumexScrapper(url='https://www.indumex.com/')
     a.scrap_dollar()
