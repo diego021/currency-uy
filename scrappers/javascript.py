@@ -2,8 +2,7 @@
 import sys
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from .scrapper import ScrapperBase, persist_data
-from .db.mongo import upsert_exchange_rates
+from .scrapper import ScrapperBase
 
 class JavascriptScrapper(ScrapperBase):
     '''Superclass containing common things to dynamic scrappers'''
@@ -31,12 +30,9 @@ class IndumexScrapper(JavascriptScrapper):
         self.rates_div = self.soup.find('div', attrs={'class': 'rates'}).find('div')
 
     def scrap_dollar(self):
-        buy = self.rates_div.find('span', id='compraDolar').text # Empty
-        sell = self.rates_div.find('span', id='ventaDolar').text # Empty
+        buy = self.convert_to_float(self.rates_div.find('span', id='compraDolar').text) # Empty
+        sell = self.convert_to_float(self.rates_div.find('span', id='ventaDolar').text) # Empty
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
-
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
 
 if __name__ == '__main__':
     a = IndumexScrapper(url='https://www.indumex.com/')

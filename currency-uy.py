@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 from scrappers import scrapper, javascript 
 
+# TODO: Move to settings file
+persist_data = True
+
 sites = [ scrapper.GalesScrapper(url='http://www.gales.com.uy/home/'),
           scrapper.VarlixScrapper(url='https://www.varlix.com.uy/'),
           scrapper.Cambio18Scrapper(url='https://www.cambio18.com/'),
@@ -12,5 +15,6 @@ sites = [ scrapper.GalesScrapper(url='http://www.gales.com.uy/home/'),
 
 for site in sites:
     site.scrap_dollar()
+    if persist_data: site.persist()
     print(site)
 

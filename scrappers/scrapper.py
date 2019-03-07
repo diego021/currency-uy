@@ -19,16 +19,20 @@ class ScrapperBase(ABC):
         self.name = ''
         self.rates = {}
 
-    @abstractmethod
-    def scrap_dollar(self):
-        assert False, 'Must implement this method'
-
     def __str__(self):
         return '{name}: {rates}'.format(name=self.name, rates=self.rates)
 
     @staticmethod
     def convert_to_float(text):
         return float(text.replace(',', '.'))
+
+    @abstractmethod
+    def scrap_dollar(self):
+        assert False, 'Must implement this method'
+
+    def persist(self):
+        if persist_data and self.rates:
+            upsert_exchange_rates(currency_exchange_name=self.name, rates=self.rates)
 
 class GalesScrapper(ScrapperBase):
 
@@ -42,9 +46,6 @@ class GalesScrapper(ScrapperBase):
         buy = self.convert_to_float(rates[1].text)
         sell = self.convert_to_float(rates[2].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
-
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
 
 class VarlixScrapper(ScrapperBase):
 
@@ -60,9 +61,6 @@ class VarlixScrapper(ScrapperBase):
         sell = self.convert_to_float(sell.text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
-
 class Cambio18Scrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
@@ -75,9 +73,6 @@ class Cambio18Scrapper(ScrapperBase):
         buy = self.convert_to_float(rates[1].text)
         sell = self.convert_to_float(rates[3].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
-
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
 
 class AspenScrapper(ScrapperBase):
 
@@ -92,9 +87,6 @@ class AspenScrapper(ScrapperBase):
         sell = self.convert_to_float(rates[2].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
-
 class MatrizScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
@@ -107,9 +99,6 @@ class MatrizScrapper(ScrapperBase):
         buy = self.convert_to_float(rates[2].text)
         sell = self.convert_to_float(rates[4].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
-
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
 
 class IberiaScrapper(ScrapperBase):
 
@@ -124,9 +113,6 @@ class IberiaScrapper(ScrapperBase):
         sell = self.convert_to_float(rates[3].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
 
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
-
 class LaFavoritaScrapper(ScrapperBase):
 
     def __init__(self, *args, **kwargs):
@@ -138,9 +124,6 @@ class LaFavoritaScrapper(ScrapperBase):
         buy = self.convert_to_float(self.rates_list[0].text)
         sell = self.convert_to_float(self.rates_list[1].text)
         self.rates.update({'dollar': {'buy': buy, 'sell': sell}})
-
-        if persist_data and buy and sell:
-            upsert_exchange_rates(currency_exchange_name=self.name, currency='dollar', buy=buy, sell=sell)
 
 if __name__ == '__main__':
     a = GalesScrapper(url='http://www.gales.com.uy/home/')
