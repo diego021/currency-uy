@@ -2,7 +2,7 @@
 import urllib.request
 from bs4 import BeautifulSoup
 from abc import ABC, abstractmethod
-from db.mongo import upsert_exchange_rates
+from .db.mongo import upsert_exchange_rates
 
 # TODO: Move to settings file
 persist_data = True

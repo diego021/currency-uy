@@ -2,7 +2,8 @@
 import sys
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from .scrapper import ScrapperBase
+from .scrapper import ScrapperBase, persist_data
+from .db.mongo import upsert_exchange_rates
 
 class JavascriptScrapper(ScrapperBase):
     '''Superclass containing common things to dynamic scrappers'''
