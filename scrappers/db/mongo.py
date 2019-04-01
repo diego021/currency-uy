@@ -25,11 +25,13 @@ class CurrencyExchange(Document):
     }
 
 def upsert_exchange_rates(currency_exchange_name, rates):
+    timestamp = datetime.datetime.utcnow()
     try:
         exchange = CurrencyExchange.objects.get(name=currency_exchange_name)
     except Exception:
         exchange = CurrencyExchange(name=currency_exchange_name)
 
-    exchange.data.append(Rates(rates=rates))
+    exchange.data.append(Rates(rates=rates, date_created=timestamp))
+    exchange.update(date_modified=timestamp)
     exchange.save()
 
