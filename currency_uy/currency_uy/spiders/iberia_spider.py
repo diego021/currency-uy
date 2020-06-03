@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import scrapy
+from currency_uy.items import CurrencyUyItem
 
 class IberiaSpider(scrapy.Spider):
     name = 'iberia'
@@ -9,13 +10,14 @@ class IberiaSpider(scrapy.Spider):
         rates = response.css('div.entry.clearfix table')
 
         for tr in rates.css('tr'):
-            values = tr.css('td::text').getall()
+            item = CurrencyUyItem()
+            _values = tr.css('td::text').getall()
 
-            if len(values) != 3:
+            if len(_values) != 3:
                 continue
 
-            yield {
-                'name': values[0],
-                'buy': values[1],
-                'sell': values[2]
-            }
+            item['name'] = _values[0]
+            item['buy'] = _values[1]
+            item['sell'] = _values[2]
+
+            yield item

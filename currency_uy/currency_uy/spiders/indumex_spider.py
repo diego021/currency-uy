@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import datetime
 import scrapy
+from currency_uy.items import CurrencyUyItem
+
 
 class IndumexSpider(scrapy.Spider):
     name = 'indumex'
@@ -22,8 +24,8 @@ class IndumexSpider(scrapy.Spider):
         response.selector.register_namespace('i', 'http://schemas.datacontract.org/2004/07/IndumexPortal.Models')
 
         for rate in response.xpath('/i:ArrayOfPizarraModel/i:PizarraModel'):
-            yield {
-                'name': IndumexSpider.currencies[rate.xpath('./i:Moneda/text()').get()],
-                'buy': rate.xpath('./i:Compra/text()').get(),
-                'sell': rate.xpath('./i:Venta/text()').get()
-            }
+            item = CurrencyUyItem()
+            item['name'] = IndumexSpider.currencies[rate.xpath('./i:Moneda/text()').get()]
+            item['buy'] = rate.xpath('./i:Compra/text()').get()
+            item['sell'] = rate.xpath('./i:Venta/text()').get()
+            yield item

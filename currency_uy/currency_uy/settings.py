@@ -16,6 +16,7 @@ NEWSPIDER_MODULE = 'currency_uy.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
+USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0'
 #USER_AGENT = 'currency_uy (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
@@ -36,7 +37,7 @@ ROBOTSTXT_OBEY = False
 #COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
+TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
 #DEFAULT_REQUEST_HEADERS = {
@@ -64,9 +65,9 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'currency_uy.pipelines.CurrencyUyPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'currency_uy.pipelines.CurrencyUyPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
